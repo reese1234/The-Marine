@@ -18,9 +18,11 @@ namespace Game
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
+        public static ConsoleColor White = ConsoleColor.White;
         public static ConsoleColor Red = ConsoleColor.Red;
         public static ConsoleColor Green = ConsoleColor.Green;
         public static ConsoleColor Cyan = ConsoleColor.Cyan;
-        public static ConsoleColor White = ConsoleColor.White;
+        public static ConsoleColor Gray = ConsoleColor.Gray;
+        public static ConsoleColor Purple = ConsoleColor.Magenta;
     }
 }
