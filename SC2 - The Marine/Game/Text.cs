@@ -10,7 +10,7 @@ namespace Game
             foreach (char letter in say)
             {
                 Console.Write(letter);
-                Thread.Sleep(50);
+                Thread.Sleep(Game.GameSpeed);
             }
             Console.Write("\n");
             Thread.Sleep(500);
@@ -21,7 +21,7 @@ namespace Game
             foreach (char letter in say)
             {
                 Console.Write(letter);
-                Thread.Sleep(50);
+                Thread.Sleep(Game.GameSpeed);
             }
             Console.Write("\n");
             Color.Reset();
@@ -60,62 +60,6 @@ namespace Game
             Console.Write(name + ": ");
             Color.Reset();
             Message(say);
-        }
-
-        public static void Choice(string A, string B)
-        {
-            Program.answer = "";
-            Color.Text(Color.Cyan);
-            Console.WriteLine($"\tA: {A}");
-            Thread.Sleep(350);
-            Console.WriteLine($"\tB: {B}");
-            Thread.Sleep(350);
-
-            Color.Reset();
-
-            for (; ; )
-            {
-                Console.Write("> ");
-                Program.answer = Console.ReadLine().ToLower();
-
-                if (Program.answer.Contains("a") || Program.answer.Contains("b"))
-                {
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-        }
-        public static void Choice(string A, string B, string C)
-        {
-            Program.answer = "";
-            Color.Text(Color.Cyan);
-            Console.WriteLine($"\tA: {A}");
-            Thread.Sleep(350);
-            Console.WriteLine($"\tB: {B}");
-            Thread.Sleep(350);
-            Console.WriteLine($"\tC: {C}");
-            Thread.Sleep(350);
-
-
-            Color.Reset();
-
-            for (; ; )
-            {
-                Console.Write("> ");
-                Program.answer = Console.ReadLine().ToLower();
-
-                if (Program.answer.Contains("a") || Program.answer.Contains("b") || Program.answer.Contains("c"))
-                {
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-            }
         }
     }
 }
