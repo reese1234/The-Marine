@@ -7,6 +7,15 @@ namespace Game
     {
         public static int GameSpeed = 50;
 
+        public static string Input()
+        {
+            Console.Write("> ");
+            Color.Text(Color.Green);
+            Data.Answer = Console.ReadLine().ToLower();
+            Color.Reset();
+            return null;
+        }
+
         public static void ChangeHealth(int change, string reason)
         {
             if (change != 0)
@@ -50,8 +59,7 @@ namespace Game
         }
         public static bool CheckItem(string item)
         {
-            string choice = Console.ReadLine().ToLower();
-            if (choice == item.ToLower() && Data.Storage.Contains(item))
+            if (Data.Answer == item.ToLower() && Data.Storage.Contains(item))
             {
                 return true;
             }
@@ -66,17 +74,16 @@ namespace Game
         {
             Data.Answer = "";
             Color.Text(Color.Cyan);
-            Console.WriteLine($"\tA: {A}");
+            Console.WriteLine($"  A: {A}");
             Thread.Sleep(350);
-            Console.WriteLine($"\tB: {B}");
+            Console.WriteLine($"  B: {B}");
             Thread.Sleep(350);
 
             Color.Reset();
 
             for (; ; )
             {
-                Console.Write("> ");
-                Data.Answer = Console.ReadLine().ToLower();
+                Input();
 
                 if (Data.Answer.Contains("a") || Data.Answer.Contains("b"))
                 {
@@ -92,11 +99,11 @@ namespace Game
         {
             Data.Answer = "";
             Color.Text(Color.Cyan);
-            Console.WriteLine($"\tA: {A}");
+            Console.WriteLine($"  A: {A}");
             Thread.Sleep(350);
-            Console.WriteLine($"\tB: {B}");
+            Console.WriteLine($"  B: {B}");
             Thread.Sleep(350);
-            Console.WriteLine($"\tC: {C}");
+            Console.WriteLine($"  C: {C}");
             Thread.Sleep(350);
 
 
@@ -104,8 +111,7 @@ namespace Game
 
             for (; ; )
             {
-                Console.Write("> ");
-                Data.Answer = Console.ReadLine().ToLower();
+                Input();
 
                 if (Data.Answer.Contains("a") || Data.Answer.Contains("b") || Data.Answer.Contains("c"))
                 {

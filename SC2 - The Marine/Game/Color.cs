@@ -11,7 +11,7 @@ namespace Game
 
         public static void Reset()
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static ConsoleColor White = ConsoleColor.White;

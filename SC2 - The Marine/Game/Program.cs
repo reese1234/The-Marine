@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Game
 {
@@ -6,38 +7,46 @@ namespace Game
     {
         static void Main()
         {
-            try
+            while (true)
             {
-                Play();
-            }
-            catch (Exception e)
-            {
-                Text.Message("Hey! You made an Exception.");
-                Text.Message("Hmm... Maybe that was me.");
-                Text.Message("I am printing the Exception now.");
-                Text.Message(Convert.ToString(e));
-            }
-            finally
-            {
-                Text.Message("Now, leave this game!");
+                try
+                {
+                    Play();
+                }
+                catch (Exception e)
+                {
+                    Text.Message("Oh no! An error occurred!", Color.Red);
+                    Console.WriteLine(e);
+                }
+                finally
+                {
+                    Text.Message("Restarting...", Color.Green);
+                    Thread.Sleep(2000);
+                }
             }
         }
         static void Play()
         {
-            Text.Message("Set a typing speed: 50 for default");
+            Text.Message("Set Game Speed (0 - 100)");
             Console.Write("> ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Game.GameSpeed = Convert.ToInt32(Console.ReadLine());
-            Console.ForegroundColor = ConsoleColor.White;
+            Color.Text(Color.Green);
+            Game.GameSpeed = 100 - Convert.ToInt32(Console.ReadLine());
+            Color.Reset();
 
-            Text.Message("Type in code (nothing to start introduction)");
+            Text.Message("\nSelect Act (0 - 1):");
+            Console.WriteLine("  - Act 0 (Introduction)");
+            Thread.Sleep(250);
+            Console.WriteLine("  - Act 1 (Zergling Infestation)");
             Console.Write("> ");
-            if (Console.ReadLine() == "JTVH8M37")
+            Color.Text(Color.Green);
+            if (Console.ReadLine() == "1")
             {
+                Color.Reset();
                 ActI.Play();
             }
             else
             {
+                Color.Reset();
                 Intro();
                 ActI.Play();
             }
@@ -45,19 +54,18 @@ namespace Game
 
         public static void Intro()
         {
-            Text.Message("Welcome to The Marine!");
+            Text.Message("\nWelcome to The Marine!");
             Text.Message("This is a game based on Starcraft.");
-            Text.Message("Would you like to play?\n");
-            Console.ReadKey();
-            Console.WriteLine("\n\n");
+            Console.WriteLine("\n");
 
             Text.Message("You are a Marine, left out in the forest.");
             Text.Message("You were out on a special mission, led by Emperor Mengsk.");
             Text.Message("Then, it didn't go as planned.");
             Text.Message("The Zerg attacked, and overwhelmed your team.");
-            Text.Message("The others were able to escape, but they left you here.");
+            Text.Message("Most of the others were able to escape, but they left you here.");
             Text.Message("Now you need to get out of this forest.");
-            Text.Message("You will require much skill. You think you're up for it?\n");
+            Text.Message("You will require much skill. You think you're up for it?");
+            Text.Message("(Type anything to start)", Color.Cyan);
             Console.ReadKey();
         }
     }
