@@ -24,7 +24,7 @@ namespace Game
             string say = possibleMessages[r.Next(0, possibleMessages.Length)];
             Color.Text(color);
             Console.Write(name + ": ");
-            Color.Text(Color.Gray);
+            Color.Text(ConsoleColor.Gray);
             Message(say);
         }
     }

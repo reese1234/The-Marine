@@ -15,12 +15,12 @@ namespace Game
                 }
                 catch (Exception e)
                 {
-                    Text.Message("Oh no! An error occurred!", Color.Red);
+                    Text.Message("\nOh no! An error occurred!", Color.Red);
                     Console.WriteLine(e);
                 }
                 finally
                 {
-                    Text.Message("Restarting...", Color.Green);
+                    Text.Message("\nRestarting...", Color.Green);
                     Thread.Sleep(2000);
                 }
             }
@@ -33,22 +33,27 @@ namespace Game
             Game.GameSpeed = 100 - Convert.ToInt32(Console.ReadLine());
             Color.Reset();
 
-            Text.Message("\nSelect Act (0 - 1):");
+            Text.Message("\nSelect Act (0 - 2):");
             Console.WriteLine("  - Act 0 (Introduction)");
             Thread.Sleep(250);
             Console.WriteLine("  - Act 1 (Zergling Infestation)");
-            Console.Write("> ");
-            Color.Text(Color.Green);
-            if (Console.ReadLine() == "1")
+            Thread.Sleep(250);
+            Console.WriteLine("  - Act 2 (Never on the Surface)");
+            Game.Input();
+            if (Data.Answer == "1")
             {
                 Color.Reset();
                 ActI.Play();
+            }
+            else if (Data.Answer == "2")
+            {
+                Color.Reset();
+                ActII.Play();
             }
             else
             {
                 Color.Reset();
                 Intro();
-                ActI.Play();
             }
         }
 
@@ -67,6 +72,7 @@ namespace Game
             Text.Message("You will require much skill. You think you're up for it?");
             Text.Message("(Type anything to start)", Color.Cyan);
             Console.ReadKey();
+            ActI.Play();
         }
     }
 }

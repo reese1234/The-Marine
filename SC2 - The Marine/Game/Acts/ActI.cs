@@ -5,9 +5,19 @@ namespace Game
 {
     class ActI
     {
-        public static int Zerg1;
-        public static int Zerg2;
-        public static int Hatchery = 60;
+        public static People Marine = new People
+        {
+            Name =          "Marine",
+            Description =   "A Marine that you found stuck in a closet. " +
+                            "They will now protect you, no matter the cost.",
+            MinDamage = -4,
+            MaxDamage = -7
+        };
+
+        static int _zerg1;
+        static int _zerg2;
+        static int _hatchery = 60;
+        static int _people = 1;
 
         public static void Play()
         {
@@ -18,21 +28,21 @@ namespace Game
             Text.Message("ACT I");
             Text.Message("Zergling Infestation", Color.Purple);
 
-            Text.Message("You rise from the grass, and you are starving.");
+            Text.Message("\nYou rise from the grass, and you are starving.");
             Text.Message("This forest is full of wildlife, and the trees are brimming with fruit.");
-            Text.Message("You think you also hear someone screaming.");
+            Text.Message("You think you also hear someone screaming.\n");
 
             Game.Choice("Hunt", "Fruit", "Find Help");
             if (Data.Answer == "a")
             {
-                Text.Message("You walked around and found a lone wolf.");
+                Text.Message("\nYou walked around and found a lone wolf.");
                 Text.Message("You didn't have anything to cook the meat with though.");
                 Data.Storage.Add("Uncooked Meat");
             }
             else if (Data.Answer == "b")
             {
-                Text.Message("You climbed the trees and knocked off the fruit.");
-                Text.Message("You ate the fruit but kept some for later.");
+                Text.Message("\nYou climbed the trees and knocked off the fruit.");
+                Text.Message("You ate the fruit but kept some for later.\n");
                 Game.ChangeHealth(20, "Fruit");
                 Data.Storage.Add("Fruit");
                 Data.Storage.Add("Fruit");
@@ -41,93 +51,83 @@ namespace Game
             }
             else if (Data.Answer == "c")
             {
-                Text.Message("You shouted for help but heard no response.");
+                Text.Message("\nYou shouted for help but heard no response.\n");
                 Game.ChangeHealth(Game.Rnd(-4, 0), "Tired/Hungry");
-                Text.Message("While you were searching, you found a bucket of Cooked Fish.");
+                Text.Message("\nWhile you were searching, you found a bucket of Cooked Fish.");
                 Data.Storage.Add("Cooked Fish");
             }
 
-            Text.Message("You walk around more and find a weak Zergling.");
+            Text.Message("\nYou walk around more and find a weak Zergling.", Color.Red);
             Text.Message("\nBATTLE!!!\n1 Zergling\n----------");
-            Zerg1 = 20;
-            while (Zerg1 > 0)
+            _zerg1 = 20;
+            while (_zerg1 > 0)
             {
+                Console.WriteLine();
                 Game.Choice("Attack", "Move", "Hold Ground");
                 if (Data.Answer == "a")
                 {
                     int dmg = Game.Rnd(2, 5);
-                    Zerg1 -= dmg;
-                    Text.Message($"Attacked Zergling (-{dmg}): {Zerg1}/20 HP");
+                    _zerg1 -= dmg;
+                    Text.Message($"\nAttacked Zergling (-{dmg}): {_zerg1}/20 HP");
                     Game.ChangeHealth(Game.Rnd(-3, -1), "Zergling");
                 }
                 else if (Data.Answer == "b")
                 {
                     Game.ChangeHealth(Game.Rnd(-1, 0), "Tired");
                     int dmg = Game.Rnd(1, 7);
-                    Zerg1 -= dmg;
-                    Text.Message($"Tired Zergling (-{dmg}): {Zerg1}/20 HP");
+                    _zerg1 -= dmg;
+                    Text.Message($"\nTired Zergling (-{dmg}): {_zerg1}/20 HP");
                 }
                 else if (Data.Answer == "c")
                 {
                     int dmg = Game.Rnd(4, 10);
-                    Zerg1 -= dmg;
-                    Text.Message($"Attacked Zergling (-{dmg}): {Zerg1}/20 HP");
+                    _zerg1 -= dmg;
+                    Text.Message($"\nAttacked Zergling (-{dmg}): {_zerg1}/20 HP");
                     Game.ChangeHealth(Game.Rnd(-6, -2), "Zergling");
                 }
             }
-            Text.Message("The Zergling dropped some meat, but you can't cook it.");
+            Text.Message("\nThe Zergling dropped some meat, but you can't cook it.\n");
             Data.Storage.Add("Uncooked Meat");
             Game.XP(2);
             if (Data.Health < 10)
-            {
-                Text.Message("A plane flew over you and dropped a Health Kit!");
+                Game.HealthKit();
 
-                Game.Choice("Use", "Keep");
-                if (Data.Answer == "b")
-                {
-                    Text.Message("You put the Health Kit in your storage.");
-                    Data.Storage.Add("Health Kit");
-                }
-                else
-                {
-                    Text.Message("You used the Health Kit.");
-                    Game.ChangeHealth(10, "Health Kit");
-                }
-            }
-
-            Text.Message("You come across an old hut. It looks like no one's used it for years.");
+            Text.Message("\nIn front of the Zergling, there is an old hut.");
+            Text.Message("It looks as if it hasn't been used in many years.\n");
             Game.Choice("Knock", "Run", "Examine");
 
             if (Data.Answer == "c")
             {
-                Text.Message("You found a pair of Flammable Sticks!");
+                Text.Message("\nYou feel around the hut and find a pair of sticks.");
+                Text.Message("You grab the sticks and they are very flammable.\n");
                 Data.Storage.Add("Flammable Sticks");
                 Game.XP(1);
             }
             else if (Data.Answer == "b")
             {
-                Text.Message("You made a run for it. You got tired.");
+                Text.Message("\nYou made a run for it. You got tired.\n");
                 Game.ChangeHealth(Game.Rnd(-3, 0), "Tired");
-                Text.Message("You found Fruit!");
+                Text.Message("You found some fruit lying on the ground.\n");
                 Data.Storage.Add("Fruit");
                 Game.XP(1);
-                Text.Message("You found Zerglings!");
+                Text.Message("\nWhen you pick up the fruit, two Zerglings suddenly appear.", Color.Red);
                 Text.Message("BATTLE!!\n2 Zerglings\n----------");
-                Zerg1 = 35;
-                Zerg2 = 35;
-                bool won = true;
-                while (Zerg1 > 0 && Zerg2 > 0)
+                _zerg1 = 35;
+                _zerg2 = 35;
+           
+                while (_zerg1 > 0 && _zerg2 > 0)
                 {
+                    Console.WriteLine();
                     Game.Choice("Attack", "Items", "Flee");
                     if (Data.Answer == "a")
                     {
                         Text.Message("Attacked");
                         int dmg1 = Game.Rnd(4, 7);
                         int dmg2 = Game.Rnd(4, 7);
-                        Zerg1 -= dmg1;
-                        Zerg2 -= dmg2;
-                        Text.Message($"Attacked Zergling 1 (-{dmg1}): {Zerg1}/35 HP");
-                        Text.Message($"Attacked Zergling 2 (-{dmg2}): {Zerg2}/35 HP");
+                        _zerg1 -= dmg1;
+                        _zerg2 -= dmg2;
+                        Text.Message($"Attacked Zergling 1 (-{dmg1}): {_zerg1}/35 HP");
+                        Text.Message($"Attacked Zergling 2 (-{dmg2}): {_zerg2}/35 HP");
                         Game.ChangeHealth(Game.Rnd(-4, -2) * Game.Rnd(1, 4), "Zerglings");
                     }
                     else if (Data.Answer == "b")
@@ -148,7 +148,7 @@ namespace Game
                             }
                             else if (Game.CheckItem("Uncooked Meat"))
                             {
-                                Game.ChangeHealth(5, "Uncooked Meat");
+                                Game.ChangeHealth(5, "Uncooked Meat (+5)");
                                 Data.Storage.Remove("Uncooked Meat");
                             }
                             else if (Game.CheckItem("Cooked Fish"))
@@ -171,9 +171,9 @@ namespace Game
                                 if (Game.Rnd(1, 6) > 2)
                                 {
                                     Text.Message("You threw burning sticks!");
-                                    Zerg1 -= Game.Rnd(0, 9);
-                                    Zerg2 -= Game.Rnd(0, 9);
-                                    Text.Message($"Zergling 1 has {Zerg1}! Zergling 2 has {Zerg2}!");
+                                    _zerg1 -= Game.Rnd(0, 9);
+                                    _zerg2 -= Game.Rnd(0, 9);
+                                    Text.Message($"Zergling 1 has {_zerg1}! Zergling 2 has {_zerg2}!");
                                     Game.ChangeHealth(Game.Rnd(-5, 0), "Sticks");
                                 }
                                 else
@@ -194,9 +194,8 @@ namespace Game
                         {
                             Text.Message("You ran away!");
                             Game.ChangeHealth(Game.Rnd(-1, 0), "Tired");
-                            Zerg1 = 0;
-                            Zerg2 = 0;
-                            won = false;
+                            _zerg1 = 0;
+                            _zerg2 = 0;
                         } 
                         else
                         {
@@ -205,29 +204,25 @@ namespace Game
                         }
                     }
                 }
-                if (Zerg1 <= 0 || Zerg2 <= 0 && won == true)
+                if (_zerg1 <= 0 || _zerg2 <= 0)
                 {
                     Text.Message("You defeated the Zerglings!");
                     Game.XP(3);
                 }
             }
             if (Data.Answer == "a")
-            {
-                Text.Message("You knocked on the door of the hut. It opened, and you went in.");
-            }
+                Text.Message("\nYou knocked on the door of the hut. It slowly opened, and walked in.");
             else
-            {
-                Text.Message("You went back to the hut and knocked. The door opened, and you went in.");
-            }
+                Text.Message("\nYou went back to the hut and knocked. The door slowly opened, and you walked in.");
 
-            Text.Message("You see Zerg Creep crawling on the floor. You notice a Creep Tumor in front of you.\n" +
+            Text.Message("\nYou see Zerg Creep crawling on the floor. You notice a Creep Tumor in front of you.\n" +
                 "Other than those, it's empty except for a closet at the other side.");
-            Text.Character("Creep Tumor", L("*scowl*", "*sss*", "seee"), Color.Purple);
+            Text.Character("Creep Tumor", L("*scowl*\n", "*sss*\n", "*seee*\n"), Color.Purple);
 
             Game.Choice("Walk around", "Shoot Creep Tumor", "Jump to closet");
             if (Data.Answer == "a")
             {
-                Text.Message("You carefully walk around. ZERGLINGS APPEAR!!");
+                Text.Message("\nYou carefully walk around. Zerglings appear from cracks in the walls.", Color.Red);
                 Game.Choice("Fight", "Lure away");
 
                 bool fight = false;
@@ -252,10 +247,9 @@ namespace Game
                 if (fight == true)
                 {
                     Text.Message("BATTLE!!\n2 Zerglings\n----------");
-                    Zerg1 = 35;
-                    Zerg2 = 35;
-                    bool won = true;
-                    while (Zerg1 > 0 && Zerg2 > 0)
+                    _zerg1 = 35;
+                    _zerg2 = 35;
+                    while (_zerg1 > 0 && _zerg2 > 0)
                     {
 
                         Game.Choice("Attack", "Items", "Flee");
@@ -264,10 +258,10 @@ namespace Game
                             Text.Message("Attacked");
                             int dmg1 = Game.Rnd(4, 7);
                             int dmg2 = Game.Rnd(4, 7);
-                            Zerg1 -= dmg1;
-                            Zerg2 -= dmg2;
-                            Text.Message($"Attacked Zergling 1 (-{dmg1}): {Zerg1}/35 HP");
-                            Text.Message($"Attacked Zergling 2 (-{dmg2}): {Zerg2}/35 HP");
+                            _zerg1 -= dmg1;
+                            _zerg2 -= dmg2;
+                            Text.Message($"Attacked Zergling 1 (-{dmg1}): {_zerg1}/35 HP");
+                            Text.Message($"Attacked Zergling 2 (-{dmg2}): {_zerg2}/35 HP");
                             Game.ChangeHealth(Game.Rnd(-4, -2) * Game.Rnd(1, 4), "Zerglings");
                         }
                         else if (Data.Answer == "b")
@@ -288,7 +282,7 @@ namespace Game
                                 }
                                 else if (Game.CheckItem("Uncooked Meat"))
                                 {
-                                    Game.ChangeHealth(5, "Uncooked Meat");
+                                    Game.ChangeHealth(5, "Uncooked Meat (+5)");
                                     Data.Storage.Remove("Uncooked Meat");
                                 }
                                 else if (Game.CheckItem("Cooked Fish"))
@@ -311,9 +305,9 @@ namespace Game
                                     if (Game.Rnd(1, 6) > 2)
                                     {
                                         Text.Message("You threw burning sticks!");
-                                        Zerg1 -= Game.Rnd(0, 9);
-                                        Zerg2 -= Game.Rnd(0, 9);
-                                        Text.Message($"Zergling 1 has {Zerg1}! Zergling 2 has {Zerg2}!");
+                                        _zerg1 -= Game.Rnd(0, 9);
+                                        _zerg2 -= Game.Rnd(0, 9);
+                                        Text.Message($"Zergling 1 has {_zerg1}! Zergling 2 has {_zerg2}!");
                                         Game.ChangeHealth(Game.Rnd(-5, 0), "Sticks");
                                     }
                                     else
@@ -334,9 +328,8 @@ namespace Game
                             {
                                 Text.Message("You ran away!");
                                 Game.ChangeHealth(Game.Rnd(-1, 0), "Tired");
-                                Zerg1 = 0;
-                                Zerg2 = 0;
-                                won = false;
+                                _zerg1 = 0;
+                                _zerg2 = 0;
                             }
                             else
                             {
@@ -345,7 +338,7 @@ namespace Game
                             }
                         }
                     }
-                    if (Zerg1 <= 0 && Zerg2 <= 0 && won == true)
+                    if (_zerg1 <= 0 && _zerg2 <= 0)
                     {
                         Text.Message("You defeated the Zerglings!");
                         Game.XP(3);
@@ -355,7 +348,7 @@ namespace Game
             }
             else if (Data.Answer == "b")
             {
-                Text.Message("You tentatively shoot the Creep Tumor.");
+                Text.Message("\nYou tentatively shoot the Creep Tumor.");
                 Text.Character("Creep Tumor", L("*SCREAM!!!*", "*CAAA!!!*"), Color.Purple);
                 Game.ChangeHealth(Game.Rnd(-3, 0), "Creep");
                 Text.Message("A bucket of Cooked Fish is at the corner!");
@@ -364,9 +357,9 @@ namespace Game
             }
             else if (Data.Answer == "c")
             {
-                if (Game.Rnd(1, 11) > 4)
+                if (Game.Rnd(0, 11) > 5)
                 {
-                    Text.Message("You made the jump!!");
+                    Text.Message("\nYou made the jump!!");
                     Text.Message("The closet is banging. You open it. A Marine is stuck inside.");
                     Text.Character("Marine", L("Thank you! Can I go with you?", "Phew! May I join you?"), Color.Cyan);
 
@@ -375,7 +368,8 @@ namespace Game
                     {
                         Text.Character("You", L("Sure!", "That's great!"));
                         Game.XP(5);
-                        Data.People++;
+                        Data.Companions.Add(Marine);
+                        _people++;
                     }
                     else if (Data.Answer == "b")
                     {
@@ -395,76 +389,58 @@ namespace Game
                 }
             }
 
-            Text.Message("You walk outside and find more creep. You look up, and see a giant creature looking over you.", Color.Red);
-            Text.Message("A supply box dropped from the sky! It contained a Health Kit.");
-            bool isDone = false;
-            while (isDone == false)
-            {
-                isDone = false;
-                Text.Message("Would you like to use the Health Kit now? Yes/No");
-                var a = Console.ReadLine().ToLower();
-                if (a == "yes")
-                {
-                    Text.Message("You used the Health Kit.");
-                    Game.ChangeHealth(10, "Health Kit");
-                    break;
-                }
-                else if (a == "no")
-                {
-                    Text.Message("You put the Health Kit in your storage.");
-                    Data.Storage.Add("Health Kit");
-                    break;
-                }
-            }
+            Text.Message("You walk outside and find more creep. You look up, and see a giant creature looming over you.", Color.Purple);
+            Game.HealthKit();
 
             Text.Message("\nBOSS BATTLE!!!\n----------");
-            Zerg1 = 25;
-            Zerg2 = 25;
+            _zerg1 = 25;
+            _zerg2 = 25;
             Text.Message("Hatchery spawned Zerglings!");
-            while (Hatchery > 0)
+            while (_hatchery > 0)
             {
+                Console.WriteLine();
                 Game.Choice("Attack", "Items");
                 if (Data.Answer == "a")
                 {
-                    if (Zerg1 > 0 && Zerg2 > 0)
+                    if (_zerg1 > 0 && _zerg2 > 0)
                     {
                         Game.Choice("Hatchery", "Zergling 1", "Zergling 2");
                         if (Data.Answer == "a")
                         {
                             int dmg = Game.Rnd(4, 7);
-                            Hatchery -= dmg;
-                            Text.Message($"Attacked Hatchery (-{dmg}): {Hatchery}/60 HP");
+                            _hatchery -= dmg;
+                            Text.Message($"\nAttacked Hatchery (-{dmg}): {_hatchery}/60 HP");
                         }
                         else if (Data.Answer == "b")
                         {
                             int dmg = Game.Rnd(4, 7);
-                            Zerg1 -= dmg;
-                            Text.Message($"Attacked Zergling 1 (-{dmg}): {Zerg1}/25 HP");
+                            _zerg1 -= dmg;
+                            Text.Message($"\nAttacked Zergling 1 (-{dmg}): {_zerg1}/25 HP");
                         }
                         else if (Data.Answer == "c")
                         {
                             int dmg = Game.Rnd(4, 7);
-                            Zerg2 -= dmg;
-                            Text.Message($"Attacked Zergling 2 (-{dmg}): {Zerg2}/25 HP");
+                            _zerg2 -= dmg;
+                            Text.Message($"\nAttacked Zergling 2 (-{dmg}): {_zerg2}/25 HP");
                         }
                     }
-                    else if (Zerg1 > 0)
+                    else if (_zerg1 > 0)
                     {
                         int dmg = Game.Rnd(4, 7);
-                        Zerg1 -= dmg;
-                        Text.Message($"Attacked Zergling 1 (-{dmg}): {Zerg1}/25 HP");
+                        _zerg1 -= dmg;
+                        Text.Message($"\nAttacked Zergling 1 (-{dmg}): {_zerg1}/25 HP");
                     }
-                    else if (Zerg2 > 0)
+                    else if (_zerg2 > 0)
                     {
                         int dmg = Game.Rnd(4, 7);
-                        Zerg2 -= dmg;
-                        Text.Message($"Attacked Zergling 2 (-{dmg}): {Zerg2}/25 HP");
+                        _zerg2 -= dmg;
+                        Text.Message($"\nAttacked Zergling 2 (-{dmg}): {_zerg2}/25 HP");
                     }
                     else
                     {
                         int dmg = Game.Rnd(4, 7);
-                        Hatchery -= dmg;
-                        Text.Message($"Attacked Hatchery (-{dmg}): {Hatchery}/60 HP");
+                        _hatchery -= dmg;
+                        Text.Message($"\nAttacked Hatchery (-{dmg}): {_hatchery}/60 HP");
                     }
                 }
                 else if (Data.Answer == "b")
@@ -485,7 +461,7 @@ namespace Game
                         }
                         else if (Game.CheckItem("Uncooked Meat"))
                         {
-                            Game.ChangeHealth(5, "Uncooked Meat");
+                            Game.ChangeHealth(5, "Uncooked Meat (+5)");
                             Data.Storage.Remove("Uncooked Meat");
                         }
                         else if (Game.CheckItem("Cooked Fish"))
@@ -508,9 +484,9 @@ namespace Game
                             if (Game.Rnd(1, 6) > 2)
                             {
                                 Text.Message("You threw burning sticks!");
-                                Zerg1 -= Game.Rnd(0, 9);
-                                Zerg2 -= Game.Rnd(0, 9);
-                                Text.Message($"Zergling 1 has {Zerg1}! Zergling 2 has {Zerg2}!");
+                                _zerg1 -= Game.Rnd(0, 9);
+                                _zerg2 -= Game.Rnd(0, 9);
+                                Text.Message($"Zergling 1 has {_zerg1}! Zergling 2 has {_zerg2}!");
                                 Game.ChangeHealth(Game.Rnd(-5, 0), "Sticks");
                             }
                             else
@@ -524,42 +500,43 @@ namespace Game
                         Text.Message("No items.");
                 }
 
-                if (Game.Rnd(0, 2) > 0 && Data.People == 1)
+                if (Game.Rnd(0, 2) > 0 && _people == 1)
                 {
                     int rnd = Game.Rnd(0, 3);
                     if (rnd == 0)
                     {
                         int dmg = Game.Rnd(4, 7);
-                        Hatchery -= dmg;
-                        Text.Message($"Marine attacked Hatchery (-{dmg}): {Hatchery}/60 HP");
+                        _hatchery -= dmg;
+                        Text.Message($"Marine attacked Hatchery (-{dmg}): {_hatchery}/60 HP\n");
                     }
                     else if (rnd == 1)
                     {
                         int dmg = Game.Rnd(4, 7);
-                        Zerg1 -= dmg;
-                        Text.Message($"Marine attacked Zergling 1 (-{dmg}): {Zerg1}/25 HP");
+                        _zerg1 -= dmg;
+                        Text.Message($"Marine attacked Zergling 1 (-{dmg}): {_zerg1}/25 HP\n");
                     }
                     else if (rnd == 2)
                     {
                         int dmg = Game.Rnd(4, 7);
-                        Zerg2 -= dmg;
-                        Text.Message($"Marine attacked Zergling 2 (-{dmg}): {Zerg2}/25 HP");
+                        _zerg2 -= dmg;
+                        Text.Message($"Marine attacked Zergling 2 (-{dmg}): {_zerg2}/25 HP\n");
                     }
                 }
-                if (Game.Rnd(0, 4) > 2 && Zerg1 <= 0 && Zerg2 <= 0)
+                if (Game.Rnd(0, 4) > 2 && _zerg1 <= 0 && _zerg2 <= 0)
                 {
-                    Zerg1 = 35;
-                    Zerg2 = 35;
-                    Text.Message("Hatchery spawned Zerglings!");
+                    _zerg1 = 35;
+                    _zerg2 = 35;
+                    Text.Message("Hatchery spawned Zerglings!", Color.Red);
                 }
-                if (Game.Rnd(0, 2) > 0 && Zerg1 > 0)
+                if (Game.Rnd(0, 2) > 0 && _zerg1 > 0)
                     Game.ChangeHealth(Game.Rnd(-4, -2), "Zergling");
-                if (Game.Rnd(0, 2) > 0 && Zerg2 > 0)
+                if (Game.Rnd(0, 2) > 0 && _zerg2 > 0)
                     Game.ChangeHealth(Game.Rnd(-4, -2), "Zergling");
                 Game.ChangeHealth(-1, "Creep");
             }
-
-            Game.Exit();
+            Game.XP(10);
+            Text.Message("The Hatchery slowly disintegrates, spitting out a new Gauss Rifle and clearing the creep.");
+            ActII.Play();
         }
 
 
