@@ -15,12 +15,12 @@ namespace Game
                 }
                 catch (Exception e)
                 {
-                    Text.Message("\nOh no! An error occurred!", Color.Red);
+                    Text.Message("\n\nOh no! An error occurred!", Color.Red);
                     Console.WriteLine(e);
                 }
                 finally
                 {
-                    Text.Message("\nRestarting...", Color.Green);
+                    Text.Message("\n\nRestarting...", Color.Green);
                     Thread.Sleep(2000);
                 }
             }

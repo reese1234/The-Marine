@@ -16,6 +16,10 @@ namespace Game
             return null;
         }
 
+        public static string[] List(string item0)
+        {
+            return new string[] { item0 };
+        }
         public static string[] List(string item0, string item1)
         {
             return new string[] { item0, item1 };
@@ -29,7 +33,7 @@ namespace Game
         {
             Text.Message("\nA plane flew over you and dropped a Health Kit!\n");
 
-            Game.Choice("Use", "Keep");
+            Choice("Use", "Keep");
             if (Data.Answer == "b")
             {
                 Text.Message("\nYou put the Health Kit in your storage.");
@@ -38,7 +42,23 @@ namespace Game
             else
             {
                 Text.Message("\nYou opened the Health Kit and used all of its medical equipment.");
-                Game.ChangeHealth(10, "Health Kit");
+                ChangeHealth(10, "Health Kit");
+            }
+        }
+        public static void _HealthKit()
+        {
+            Text.Message("\nA familiar supply plane dropped a Big Health Kit!\n");
+
+            Choice("Use", "Keep");
+            if (Data.Answer == "b")
+            {
+                Text.Message("\nYou put the Health Kit in your storage.");
+                Data.Storage.Add("Big Health Kit");
+            }
+            else
+            {
+                Text.Message("\nYou opened the Health Kit and used all of its medical equipment.");
+                ChangeHealth(20, "Big Health Kit");
             }
         }
 

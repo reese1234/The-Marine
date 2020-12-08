@@ -7,17 +7,18 @@ namespace Game
     {
         public static People Marine = new People
         {
-            Name =          "Marine",
-            Description =   "A Marine that you found stuck in a closet. " +
+            Name = "Marine",
+            Description = "A Marine that you found stuck in a closet. " +
                             "They will now protect you, no matter the cost.",
             MinDamage = -4,
-            MaxDamage = -7
+            MaxDamage = -7,
+            TimesToAttack = 1
         };
 
         static int _zerg1;
         static int _zerg2;
         static int _hatchery = 60;
-        static int _people = 1;
+        static int _people = 0;
 
         public static void Play()
         {
@@ -54,6 +55,7 @@ namespace Game
                 Text.Message("\nYou shouted for help but heard no response.\n");
                 Game.ChangeHealth(Game.Rnd(-4, 0), "Tired/Hungry");
                 Text.Message("\nWhile you were searching, you found a bucket of Cooked Fish.");
+                Game.HealthKit();
                 Data.Storage.Add("Cooked Fish");
             }
 
@@ -107,6 +109,7 @@ namespace Game
             {
                 Text.Message("\nYou made a run for it. You got tired.\n");
                 Game.ChangeHealth(Game.Rnd(-3, 0), "Tired");
+                Game.HealthKit();
                 Text.Message("You found some fruit lying on the ground.\n");
                 Data.Storage.Add("Fruit");
                 Game.XP(1);
@@ -389,13 +392,13 @@ namespace Game
                 }
             }
 
-            Text.Message("You walk outside and find more creep. You look up, and see a giant creature looming over you.", Color.Purple);
-            Game.HealthKit();
+            Text.Message("You walk outside and find more creep. You look up, and see a giant creature looming over you, accompanied by Zerglings.", Color.Purple);
+            Text.Character("Marine", Game.List("I'll take out the Zerglings.", "I'll take care of the pesky beasts.", "Don't you worry about them little creatures."));
+            Game._HealthKit();
 
             Text.Message("\nBOSS BATTLE!!!\n----------");
             _zerg1 = 25;
             _zerg2 = 25;
-            Text.Message("Hatchery spawned Zerglings!");
             while (_hatchery > 0)
             {
                 Console.WriteLine();
@@ -478,6 +481,11 @@ namespace Game
                         {
                             Game.ChangeHealth(10, "Health Kit");
                             Data.Storage.Remove("Health Kit");
+                        } 
+                        else if (Game.CheckItem("Big Health Kit"))
+                        {
+                            Game.ChangeHealth(20, "Big Health Kit");
+                            Data.Storage.Remove("Big Health Kit");
                         }
                         else if (Game.CheckItem("Flammable Sticks"))
                         {
@@ -502,20 +510,14 @@ namespace Game
 
                 if (Game.Rnd(0, 2) > 0 && _people == 1)
                 {
-                    int rnd = Game.Rnd(0, 3);
+                    int rnd = Game.Rnd(0, 2);
                     if (rnd == 0)
-                    {
-                        int dmg = Game.Rnd(4, 7);
-                        _hatchery -= dmg;
-                        Text.Message($"Marine attacked Hatchery (-{dmg}): {_hatchery}/60 HP\n");
-                    }
-                    else if (rnd == 1)
                     {
                         int dmg = Game.Rnd(4, 7);
                         _zerg1 -= dmg;
                         Text.Message($"Marine attacked Zergling 1 (-{dmg}): {_zerg1}/25 HP\n");
                     }
-                    else if (rnd == 2)
+                    else if (rnd == 1)
                     {
                         int dmg = Game.Rnd(4, 7);
                         _zerg2 -= dmg;

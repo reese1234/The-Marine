@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 
 namespace Game
 {
@@ -19,7 +18,7 @@ namespace Game
         static Enemy Hydralisk = new Enemy
         {
             Name =          "Hydralisk",
-            Description =   "A Zerg that has Needle Spines and slithers." +
+            Description =   "A Zerg that has Needle Spines and slithers.\n" +
                             "Attacks quickly and can hit both air and ground.",
             MaxHealth =     40,
             MinDamage =     -2,
@@ -29,8 +28,8 @@ namespace Game
         static Enemy Roach = new Enemy
         {
             Name =          "Roach",
-            Description =   "A Zerg burrowing assault unit. Has Acid Saliva to melt enemies." +
-                            "Used for surprise attacks and can regenerate health quickly.",
+            Description =   "A Zerg burrowing assault unit. Has Acid Saliva to melt enemies.\n" +
+                            "             Used for surprise attacks and can regenerate health quickly.",
             MaxHealth =     50,
             MinDamage =     -3,
             MaxDamage =     -7
@@ -48,7 +47,7 @@ namespace Game
         public static People Blacksmith = new People
         {
             Name = "Blacksmith",
-            Description = "A blacksmith who can easily fix broken weapons. " +
+            Description = "A blacksmith who can easily fix broken weapons.\n" +
                             "He is also trained to use a Firebat suit, making him a useful fighter.",
             MinDamage = -4,
             MaxDamage = -7
@@ -57,24 +56,31 @@ namespace Game
         public static People BlacksmithFriend = new People
         {
             Name = "Blacksmith",
-            Description = "A blacksmith who can easily fix broken weapons. " +
-                            "He is friends with the Marine, and is good in a Firebat suit.",
+            Description =   "A blacksmith who can easily fix broken weapons.\n" +
+                            "He is also trained to use a Firebat suit, making him a useful fighter.\n" +
+                            "He is friends with the Marine, who gives him extra training and practice.",
             MinDamage = -6,
             MaxDamage = -8
         };
 
         public static void Play()
         {
+            if (Data.MaxHealth == 0)
+                Data.MaxHealth = 35;
+            Data.Health = Data.MaxHealth;
+
             Console.WriteLine("\n");
             Text.Message("ACT II");
-            Text.Message("Never on the Surface", Color.Purple);
+            Text.Message("Never on the Surface\n", Color.Purple);
 
-            Text.Message("\nYou keep walking on your path, carrying the new Gauss Rifle.");
-            Text.Message("It was badly damaged, as it had been digested a Hatchery.\n");
+            Game.HealthKit();
+            Text.Message("You keep walking on your path, carrying the new Gauss Rifle.");
+            Text.Message("It was badly damaged, as it had been digested a Hatchery.");
+
             Data.Companions.Add(ActI.Marine);
             if (Data.Companions.Contains(ActI.Marine))
             {
-                Text.Character("Marine", Game.List("Hey, I know someone who could fix that.",
+                Text.Character("\nMarine", Game.List("Hey, I know someone who could fix that.",
                                                     "I have a friend who is a master at fixing things.",
                                                     "There is a guy that could take a look at that."));
                 Game.Choice("'Contact him!'", "'Where is he now?'");
@@ -93,7 +99,70 @@ namespace Game
                 }
             }
 
+            Text.Message("\nImmediately after that, the ground starts rumbling.");
+            if (Data.Companions.Contains(ActI.Marine))
+                Text.Character("Marine", Game.List("Is this an earthquake?", "Look out, this looks bad!"));
+            Text.Message("Out of the ground comes a monstrosity, with green saliva dripping from its tusks, melting the ground beneath it.", Color.Red);
 
+            Roach.Add();
+            Roach.Announce();
+
+            while (Data.Foes.Find(x => x == Roach).Health > 0)
+            {
+                Game.Choice("Attack", "Items", "Order");
+                if (Data.Answer == "a")
+                {
+
+                } 
+                else if (Data.Answer == "b")
+                {
+
+                }
+                else if (Data.Answer == "c")
+                {
+                    Text.Message("Companions:");
+                    foreach (People person in Data.Companions)
+                    {
+                        Console.WriteLine($"\n{person.Name}");
+                        Text.Message(person.Description);
+                    }
+                    Game.Input();
+
+                    if (Data.Answer == "Marine" && Data.Companions.Contains(ActI.Marine))
+                    {
+                        Game.Choice("Attack", "Stimpack");
+                        if (Data.Answer == "a")
+                        {
+                            for (int i = 0; i == Data.Companions.Find(x => x == ActI.Marine).TimesToAttack; i++)
+                            {
+                                Text.Message("Enemies:");
+                                foreach (Enemy enemy in Data.Foes)
+                                {
+                                    Console.WriteLine($"  - {enemy.Name} ({enemy.Health}/{enemy.MaxHealth})");
+                                    Thread.Sleep(250);
+                                }
+                                if (Data.Answer == "Roach" && Data.Foes.Contains(Roach))
+                                {
+                                    Data.Foes.Find(x => x == Roach).Health -= Game.Rnd(Data.Companions.Find(x => x == ActI.Marine).MaxDamage, Data.Companions.Find(x => x == ActI.Marine).MinDamage);
+                                }
+                            }
+                        }
+                        else if (Data.Answer == "b")
+                        {
+                            Data.Companions.Find(x => x == ActI.Marine).MinDamage = -2;
+                            Data.Companions.Find(x => x == ActI.Marine).MaxDamage = -4;
+                            Data.Companions.Find(x => x == ActI.Marine).TimesToAttack = 2;
+                            Text.Message("Damage was halved and now can attack twice.", Color.Yellow);
+                        }
+                    }
+                }
+            }
+            if (Data.Companions.Contains(ActI.Marine))
+            {
+                Data.Companions.Find(x => x == ActI.Marine).MinDamage = -4;
+                Data.Companions.Find(x => x == ActI.Marine).MaxDamage = -7;
+                Data.Companions.Find(x => x == ActI.Marine).TimesToAttack = 1;
+            }
         }
     }
 }
