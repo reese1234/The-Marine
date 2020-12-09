@@ -74,7 +74,7 @@ namespace Game
             Text.Message("Never on the Surface\n", Color.Purple);
 
             Game.HealthKit();
-            Text.Message("You keep walking on your path, carrying the new Gauss Rifle.");
+            Text.Message("\nYou keep walking on your path, carrying the new Gauss Rifle.");
             Text.Message("It was badly damaged, as it had been digested a Hatchery.");
 
             Data.Companions.Add(ActI.Marine);
@@ -103,37 +103,42 @@ namespace Game
             if (Data.Companions.Contains(ActI.Marine))
                 Text.Character("Marine", Game.List("Is this an earthquake?", "Look out, this looks bad!"));
             Text.Message("Out of the ground comes a monstrosity, with green saliva dripping from its tusks, melting the ground beneath it.", Color.Red);
+            Text.Message("On its head are a few health items, which would be useful if you defeat it.", Color.Red);
 
             Roach.Add();
             Roach.Announce();
 
-            while (Data.Foes.Find(x => x == Roach).Health > 0)
+            Console.WriteLine("\n");
+
+            while (Roach.HP() > 0)
             {
                 Game.Choice("Attack", "Items", "Order");
                 if (Data.Answer == "a")
-                {
-
-                } 
+                    Roach.ChangeHP("Attacked Roach", Game.Rnd(-7, -4));
                 else if (Data.Answer == "b")
-                {
-
-                }
+                    Game.ChooseItem();
                 else if (Data.Answer == "c")
                 {
-                    Text.Message("Companions:");
+                    Text.Message("\nCompanions:");
                     foreach (People person in Data.Companions)
                     {
+                        Color.Text(Color.Yellow);
                         Console.WriteLine($"\n{person.Name}");
-                        Text.Message(person.Description);
+                        Color.Reset();
+                        Console.Write("Description: ");
+                        Text.Message(person.Description, ConsoleColor.Gray);
                     }
+                    Console.WriteLine();
                     Game.Input();
 
-                    if (Data.Answer == "Marine" && Data.Companions.Contains(ActI.Marine))
+                    if (Data.Answer == "marine" && Data.Companions.Contains(ActI.Marine))
                     {
+                        ActI.Marine.Ordering();
                         Game.Choice("Attack", "Stimpack");
                         if (Data.Answer == "a")
                         {
-                            for (int i = 0; i == Data.Companions.Find(x => x == ActI.Marine).TimesToAttack; i++)
+                            Console.WriteLine();
+                            for (int i = 0; i < ActI.Marine.Attacks(); i++)
                             {
                                 Text.Message("Enemies:");
                                 foreach (Enemy enemy in Data.Foes)
@@ -141,27 +146,49 @@ namespace Game
                                     Console.WriteLine($"  - {enemy.Name} ({enemy.Health}/{enemy.MaxHealth})");
                                     Thread.Sleep(250);
                                 }
-                                if (Data.Answer == "Roach" && Data.Foes.Contains(Roach))
+                                Game.Input();
+
+                                if (Data.Answer == "roach" && Data.Foes.Contains(Roach))
                                 {
-                                    Data.Foes.Find(x => x == Roach).Health -= Game.Rnd(Data.Companions.Find(x => x == ActI.Marine).MaxDamage, Data.Companions.Find(x => x == ActI.Marine).MinDamage);
+                                    Roach.ChangeHP("Marine attacked Roach", ActI.Marine.Dmg());
                                 }
                             }
                         }
                         else if (Data.Answer == "b")
                         {
-                            Data.Companions.Find(x => x == ActI.Marine).MinDamage = -2;
-                            Data.Companions.Find(x => x == ActI.Marine).MaxDamage = -4;
-                            Data.Companions.Find(x => x == ActI.Marine).TimesToAttack = 2;
-                            Text.Message("Damage was halved and now can attack twice.", Color.Yellow);
+                            ActI.Marine.ChangeMinDmg(-2);
+                            ActI.Marine.ChangeMaxDmg(-4);
+                            ActI.Marine.ChangeAttacks(2);
+                            Text.Message("\nDamage was halved and now can attack twice.\n", Color.Yellow);
                         }
                     }
                 }
+
+                if (Data.Companions.Contains(ActI.Marine))
+                {
+                    if (Game.Rnd(0, 2) == 0 && !ActI.Marine.Order())
+                        Roach.ChangeHP("Marine attacked Roach", ActI.Marine.Dmg());
+                    ActI.Marine.Ordering();
+                }
+
+                if (Game.Rnd(0, 2) == 0)
+                {
+                    Game.ChangeHealth(Roach.Dmg(), "Roach");
+                    if (Game.Rnd(0, 3) == 0 && Data.AcidEffect == 0)
+                    {
+                        Text.Message("You've been acidified!", Color.Yellow);
+                        Data.AcidEffect = 1;
+                    }
+                }
+                if (Data.AcidEffect > 0)
+                    Game.ChangeHealth(-Data.AcidEffect, "Acid");
             }
             if (Data.Companions.Contains(ActI.Marine))
             {
-                Data.Companions.Find(x => x == ActI.Marine).MinDamage = -4;
-                Data.Companions.Find(x => x == ActI.Marine).MaxDamage = -7;
-                Data.Companions.Find(x => x == ActI.Marine).TimesToAttack = 1;
+                ActI.Marine.ChangeMinDmg(-4);
+                ActI.Marine.ChangeMaxDmg(-7);
+                ActI.Marine.ChangeAttacks(1);
+                Text.Message("Marine's damage and attacks have reset.\n", Color.Yellow);
             }
         }
     }

@@ -7,19 +7,14 @@ namespace Game
     {
         public static int GameSpeed = 50;
 
-        public static string Input()
+        public static void Input()
         {
             Console.Write("> ");
             Color.Text(Color.Green);
             Data.Answer = Console.ReadLine().ToLower();
             Color.Reset();
-            return null;
         }
 
-        public static string[] List(string item0)
-        {
-            return new string[] { item0 };
-        }
         public static string[] List(string item0, string item1)
         {
             return new string[] { item0, item1 };
@@ -31,7 +26,7 @@ namespace Game
 
         public static void HealthKit()
         {
-            Text.Message("\nA plane flew over you and dropped a Health Kit!\n");
+            Text.Message("\nA plane flew over you and dropped a Health Kit!");
 
             Choice("Use", "Keep");
             if (Data.Answer == "b")
@@ -41,13 +36,13 @@ namespace Game
             }
             else
             {
-                Text.Message("\nYou opened the Health Kit and used all of its medical equipment.");
+                Text.Message("You opened the Health Kit and used all of its medical equipment.");
                 ChangeHealth(10, "Health Kit");
             }
         }
         public static void _HealthKit()
         {
-            Text.Message("\nA familiar supply plane dropped a Big Health Kit!\n");
+            Text.Message("\nA familiar supply plane dropped a Big Health Kit!");
 
             Choice("Use", "Keep");
             if (Data.Answer == "b")
@@ -57,9 +52,54 @@ namespace Game
             }
             else
             {
-                Text.Message("\nYou opened the Health Kit and used all of its medical equipment.");
+                Text.Message("You opened the Health Kit and used all of its medical equipment.");
                 ChangeHealth(20, "Big Health Kit");
             }
+        }
+        public static void ChooseItem()
+        {
+            if (Data.Storage.Count > 0)
+            {
+                Text.Message("Items:");
+                foreach (string item in Data.Storage)
+                {
+                    Console.WriteLine($"  - {item}");
+                    Thread.Sleep(250);
+                }
+                Input();
+                if (CheckItem("Fruit"))
+                {
+                    ChangeHealth(5, "Fruit");
+                    Data.Storage.Remove("Fruit");
+                }
+                else if (CheckItem("Uncooked Meat"))
+                {
+                    ChangeHealth(5, "Uncooked Meat (+5)");
+                    Data.Storage.Remove("Uncooked Meat");
+                }
+                else if (CheckItem("Cooked Fish"))
+                {
+                    ChangeHealth(10, "Cooked Fish");
+                    Data.Storage.Remove("Cooked Fish");
+                }
+                else if (CheckItem("Steak"))
+                {
+                    ChangeHealth(15, "Steak");
+                    Data.Storage.Remove("Steak");
+                }
+                else if (CheckItem("Health Kit"))
+                {
+                    ChangeHealth(10, "Health Kit");
+                    Data.Storage.Remove("Health Kit");
+                }
+                else if (CheckItem("Big Health Kit"))
+                {
+                    ChangeHealth(20, "Big Health Kit");
+                    Data.Storage.Remove("Big Health Kit");
+                }
+            }
+            else
+                Text.Message("No items.");
         }
 
         public static void ChangeHealth(int change, string reason)

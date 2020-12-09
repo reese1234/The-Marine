@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Game
+﻿namespace Game
 {
     class People
     {
@@ -11,18 +7,48 @@ namespace Game
         public int MinDamage { get; set; }
         public int MaxDamage { get; set; }
         public int TimesToAttack { get; set; }
+        public bool Ordered = false;
 
-        public int GetInt(string toGet)
+        public int MinDmg()
         {
-            toGet.ToLower();
-            if (toGet == "mindmg")
-                return Data.Companions.Find(x => x == this).MinDamage;
-            if (toGet == "maxdmg")
-                return Data.Companions.Find(x => x == this).MaxDamage;
-            if (toGet == "attacks")
-                return Data.Companions.Find(x => x == this).TimesToAttack;
-            else
-                return 0;
+            return Data.Companions.Find(x => x == this).MinDamage;
+        }
+        public int MaxDmg()
+        {
+            return Data.Companions.Find(x => x == this).MaxDamage;
+        }
+        public int Attacks()
+        {
+            return Data.Companions.Find(x => x == this).TimesToAttack;
+        }
+        public bool Order()
+        {
+            return Data.Companions.Find(x => x == this).Ordered;
+        }
+
+        public void ChangeMinDmg(int newValue)
+        {
+            Data.Companions.Find(x => x == this).MinDamage = newValue;
+        }
+        public void ChangeMaxDmg(int newValue)
+        {
+            Data.Companions.Find(x => x == this).MaxDamage = newValue;
+        }
+        public void ChangeAttacks(int newValue)
+        {
+            Data.Companions.Find(x => x == this).TimesToAttack = newValue;
+        }
+        public void Ordering()
+        {
+            if (Ordered)
+                Ordered = false;
+            if (!Ordered)
+                Ordered = true;
+        }
+
+        public int Dmg()
+        {
+            return Game.Rnd(MaxDamage, MinDamage);
         }
     }
 }

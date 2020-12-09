@@ -8,6 +8,7 @@ namespace Game
 
         public static int Health;
         public static int MaxHealth;
+        public static int AcidEffect;
 
         public static int Level = 1;
         public static int XP;

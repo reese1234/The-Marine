@@ -8,8 +8,8 @@ namespace Game
         public static People Marine = new People
         {
             Name = "Marine",
-            Description = "A Marine that you found stuck in a closet. " +
-                            "They will now protect you, no matter the cost.",
+            Description = "  A Marine that you found stuck in a closet. " +
+                            "  They will now protect you, no matter the cost.",
             MinDamage = -4,
             MaxDamage = -7,
             TimesToAttack = 1
